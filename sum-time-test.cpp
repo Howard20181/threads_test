@@ -125,6 +125,6 @@ int main(int argc, char *argv[])
 	std::cout << "Multi-threaded:" << std::endl
 			  << "threads=" << thread_count << std::endl
 			  << "time=" << std::chrono::duration<double, std::milli>(diff).count() << "ms" << std::endl
-			  << std::setprecision(0) << "sum=" << sum;
+			  << std::setprecision(0) << "sum=" << sum << std::endl;
 	// End Multi-threaded
 }
