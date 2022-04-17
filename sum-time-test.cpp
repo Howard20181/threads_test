@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iomanip>
 #include <thread>
+#include <climits>
 #include "ThreadPool.hpp"
 
 using namespace std;
