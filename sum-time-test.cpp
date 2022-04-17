@@ -107,12 +107,13 @@ int main(int argc, char *argv[])
 	// End Single-threaded
 
 	// Multi-threaded
+	std::cout << "Multi-threaded:" << std::endl;
 	sum = 0;
 	unsigned long long start;
 	unsigned long long end;
 	auto block_size = count_to / thread_count;
 	thread_pool pool{thread_count};
-
+	cout << "threads=" << pool.thread_count() << std::endl;
 	start_time = std::chrono::steady_clock::now();
 	for (auto i = 0; i < thread_count; i++)
 	{
@@ -120,11 +121,11 @@ int main(int argc, char *argv[])
 		end = (static_cast<unsigned long long>(i) + 1) * block_size;
 		pool.push(std::bind(sumUp, std::ref(sum), start, end));
 	}
+
 	pool.join();
 	diff = std::chrono::steady_clock::now() - start_time;
-	std::cout << "Multi-threaded:" << std::endl
-			  << "threads=" << thread_count << std::endl
-			  << "time=" << std::chrono::duration<double, std::milli>(diff).count() << "ms" << std::endl
-			  << std::setprecision(0) << "sum=" << sum << std::endl;
+
+	cout << "time=" << std::chrono::duration<double, std::milli>(diff).count() << "ms" << std::endl
+			  << "sum=" << sum << std::endl;
 	// End Multi-threaded
 }
