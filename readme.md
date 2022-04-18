@@ -10,7 +10,7 @@ update submodule
 
 ## build in Linux
 
-`g++ -lpthread`
+`g++ -pthread`
 
 ## Credits
 
