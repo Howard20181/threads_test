@@ -37,37 +37,33 @@ int unsigned_llong_overflow(unsigned long long var_a, unsigned long long var_b)
 void sumUpTasks(std::promise<unsigned long long> &&prom, const unsigned long long start, const unsigned long long end)
 {
 	unsigned long long sum = {};
-	auto temp = end;
-	do
+	for (auto i = start; i <= end; i++)
 	{
 #ifdef _DEBUG
 		if (unsigned_llong_overflow(sum, temp) == 1)
 			return;
 #endif // _DEBUG
-		sum += temp;
-		temp--;
-	} while (temp >= start);
+		sum += i;
+	}
 	prom.set_value(sum);
 }
 thread_local unsigned long long tmpSum = 0;
 void sumUp(std::atomic<unsigned long long> &sum, const unsigned long long start, const unsigned long long end)
 {
-	auto temp = end;
-	do
+	for (auto i = start; i <= end; i++)
 	{
 #ifdef _DEBUG
 		if (unsigned_llong_overflow(tmpSum, temp) == 1)
 			return;
 #endif // _DEBUG
-		tmpSum += temp;
-		temp--;
-	} while (temp >= start);
+		tmpSum += i;
+	}
 	sum.fetch_add(tmpSum, std::memory_order_relaxed);
 }
 int main(int argc, char *argv[])
 {
 	unsigned long long count_to = MAX_NUM;
-	unsigned short thread_count = 2;
+	unsigned short thread_count = 8;
 	std::atomic<unsigned long long> sum{};
 	std::cout << "Time Test of Single-threaded and Multi-threaded summation" << std::endl;
 
@@ -91,13 +87,13 @@ int main(int argc, char *argv[])
 
 	auto start_time = std::chrono::steady_clock::now();
 
-	// std::promise<unsigned long long> prom1;
-	// auto fut1 = prom1.get_future();
-	// std::thread t1(sumUp, std::move(prom1), 1, count_to);
-	// sumUpReturn(std::ref(sum), 1, count_to);
-	// sum = fut1.get();
+	 //std::promise<unsigned long long> prom1;
+	 //auto fut1 = prom1.get_future();
+	 ////std::thread t1(sumUpTasks, std::move(prom1), 1, count_to);
+	 //sumUpTasks(std::move(prom1), 1, count_to);
+	 //sum = fut1.get();
 
-	std::thread t1(sumUp, std::ref(sum), 1, count_to);
+	std::thread t1(sumUp, std::ref(sum), 0, count_to);
 	t1.join();
 
 	auto diff = std::chrono::steady_clock::now() - start_time;
@@ -117,7 +113,7 @@ int main(int argc, char *argv[])
 	start_time = std::chrono::steady_clock::now();
 	for (auto i = 0; i < thread_count; i++)
 	{
-		start = i * block_size + 1;
+		start = i != 0 ? i * block_size + 1 : i * block_size;
 		end = (static_cast<unsigned long long>(i) + 1) * block_size;
 		pool.push(std::bind(sumUp, std::ref(sum), start, end));
 	}
