@@ -1,0 +1,3 @@
+[submodule "Thread-Pool-Cpp"]
+	path = Thread-Pool-Cpp
+	url = https://github.com/Ethan13310/Thread-Pool-Cpp.git
