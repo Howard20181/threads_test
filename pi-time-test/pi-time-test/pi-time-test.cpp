@@ -9,7 +9,7 @@
 #include <thread>
 #include <climits>
 #include <cmath>
-#include "..\..\Thread-Pool-Cpp\ThreadPool.hpp"
+#include "../../Thread-Pool-Cpp/ThreadPool.hpp"
 
 
 using namespace std;

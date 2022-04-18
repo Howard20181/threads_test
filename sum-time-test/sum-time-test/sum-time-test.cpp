@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <thread>
 #include <climits>
-#include "..\..\Thread-Pool-Cpp\ThreadPool.hpp"
+#include "../../Thread-Pool-Cpp/ThreadPool.hpp"
 
 using namespace std;
 
