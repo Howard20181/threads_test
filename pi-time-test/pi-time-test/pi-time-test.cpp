@@ -15,7 +15,7 @@
 using namespace std;
 
 void sumUp(std::atomic<double>& sum, const double start, const double end)
-{
+{//atomic原子操作 lock-free
 	double factor = fmod(start, 2) == 0 ? 1.0 : -1.0;
 #ifdef _DEBUG
 	cout << "start=" << start << " end=" << end << " factor=" << factor << endl;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	std::chrono::duration<long long, std::nano> diff;
 	unsigned long long n = 1000000000;
 	unsigned short thread_count = 4;
-	std::atomic<double> sum{};
+	std::atomic<double> sum{};//atomic lock-free
 	double pi = 0.0;
 	std::cout << "Time Test of Single-threaded and Multi-threaded pi-value solution" << std::endl;
 
@@ -88,10 +88,10 @@ Multi:
 	{
 		start = i != 0 ? i * block_size + 1 : i * block_size;
 		end = (i + 1) * block_size;
-		pool.push(std::bind(sumUp, std::ref(sum), start, end));
+		pool.push(std::bind(sumUp, std::ref(sum), start, end));//ref引用调用
 	}
 
-	pool.join();
+	pool.join();//池中所有线程join，sum结果才可靠
 	pi = 4.0 * sum;
 	diff = std::chrono::steady_clock::now() - start_time;
 
